@@ -113,28 +113,36 @@ void loop() {
   // compare the buttonState to its previous state
   if ((upButtonState != lastUpButtonState || downButtonState != lastDownButtonState) && !countdown)
   {
-    // if the state has changed, increment the counter
-    if (upButtonState == LOW) {
-      // if the current state is HIGH then the button went from off to on:
-      if (t < 99)
-      {
-        t++;
-      }
-      Serial.println("up pressed");
+    if (sleep && (upButtonState == LOW || downButtonState == LOW)) //if sleeping, wake up
+    {
+      resetTimer();
     }
-    if (downButtonState == LOW) {
-      // if the current state is HIGH then the button went from off to on:
-      if (t > 1)
-      {
-        t--;
+    else
+    {
+      // if the state has changed, increment the counter
+      if (upButtonState == LOW) {
+        // if the current state is HIGH then the button went from off to on:
+        if (t < 99)
+        {
+          t++;
+        }
+        Serial.println("up pressed");
       }
-      Serial.println("down pressed");
+      if (downButtonState == LOW) {
+        // if the current state is HIGH then the button went from off to on:
+        if (t > 1)
+        {
+          t--;
+        }
+        Serial.println("down pressed");
+      }
+
+      Serial.print("t minutes: ");
+      Serial.println(t);
+      resetTimer();
     }
 
-    Serial.print("t minutes: ");
-    Serial.println(t);
     buttonHoldStartMillis = millis();
-    resetTimer();
     // Delay a little bit to avoid bouncing
     delay(50);
   }
@@ -145,7 +153,7 @@ void loop() {
       upButtonState = digitalRead(UPBUTTON);
       downButtonState = digitalRead(DOWNBUTTON);
       //Serial.println(sleepMillis);
-      if (millis() - sleepMillis > 300000)
+      if (millis() - sleepMillis > 5000)//300000)
       {
         Serial.println(sleep);
         if (!sleep)
@@ -214,7 +222,11 @@ void loop() {
   {
     if (onButtonState == LOW)
     {
-      if (!countdown)
+      if (sleep)
+      {
+        resetTimer();
+      }
+      else if (!countdown)
       {
         //start timer
         Serial.println("starting timer...");
