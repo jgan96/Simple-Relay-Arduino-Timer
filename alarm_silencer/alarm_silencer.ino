@@ -12,7 +12,7 @@
 bool countdown = false;
 bool sleep = false;
 int t = 2; //time duration to disable alarm in minutes
-int s = 0; //time duration of t in seconds
+int s = t * 60; //time duration of t in seconds
 int secondsPassed = 0; //for the timer
 int upButtonState = 0;         // current state of the button
 int lastUpButtonState = 0;     // previous state of the button
