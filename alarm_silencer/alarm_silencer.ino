@@ -27,7 +27,6 @@ long buttonHoldStartMillis = 0;
 long sleepMillis = 0;
 Adafruit_7segment matrix = Adafruit_7segment();
 
-// a function to be executed periodically
 void toggleAlarm(bool disable) {
   //trigger relay & led
   if (disable)
@@ -139,9 +138,8 @@ void loop() {
     // Delay a little bit to avoid bouncing
     delay(50);
   }
-  else if ((upButtonState == lastUpButtonState || downButtonState == lastDownButtonState) && onButtonState == HIGH && !countdown) //else if up/down buttons are being held
+  else if ((upButtonState == lastUpButtonState || downButtonState == lastDownButtonState) && onButtonState == HIGH && !countdown) //else if no buttons are being pressed or up/down buttons are being held
   {
-    //Serial.println("button being held...");
     if (upButtonState == HIGH && downButtonState == HIGH) //sleep display after 5 minutes of no button presses
     {
       upButtonState = digitalRead(UPBUTTON);
@@ -164,13 +162,17 @@ void loop() {
         {
           //after brightness goes to 0, clear display
           int8_t displayPos = 4;
-          while(displayPos >= 0)
+          while (displayPos >= 0)
           {
             matrix.writeDigitRaw(displayPos--, 0x00);
           }
           matrix.writeDisplay();
         }
       }
+    }
+    else //else up/down buttons are being held
+    {
+      //Serial.println("button being held...");
     }
     while (upButtonState == LOW && downButtonState == HIGH)
     {
