@@ -153,7 +153,7 @@ void loop() {
       upButtonState = digitalRead(UPBUTTON);
       downButtonState = digitalRead(DOWNBUTTON);
       //Serial.println(sleepMillis);
-      if (millis() - sleepMillis > 5000)//300000)
+      if (millis() - sleepMillis > 300000)
       {
         Serial.println(sleep);
         if (!sleep)
